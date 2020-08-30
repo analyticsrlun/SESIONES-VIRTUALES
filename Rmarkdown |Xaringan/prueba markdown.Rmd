@@ -1,0 +1,98 @@
+---
+title: "Rmarkdown"
+author: "R-Ladies Barranquilla"
+date: "7/8/2020"
+output: html_document
+---
+
+Para inluir un bloque de codigo es necesario insertarlo y cada uno debe tener un nombre distinto.
+Entre los comandos de utilidad tenemos: 
+
+*cursiva* **negrita** ***negrita y cursiva***
+
+Otros comandos controlan que el código aparezca en el reporte final o no. 
+include = FALSE ejecuta el código, pero no muestra el código o los resultados en el documento final. Usa esto para que código de configuracion que no quieres que abarrote tu reporte.
+echo = FALSE evita que se vea el código, pero no los resultados en el archivo final. Utiliza esto cuando quieres escribir reportes enfocados a personas que no quieren ver el código subyacente de R.
+message = FALSE o warning = FALSE evita que aparezcan mensajes o advertencias en el archivo final.
+error = TRUE causa que el render continúe incluso si el código devuelve un error.
+results=FALSE Muestra la linea de codigo, pero no el resultado en el informe.
+Los # son usados para escribir titulos. Mientras más # pongas, más pequeñas seran las letras (limite hasta 6).
+
+### Ejemplo 1
+Incluir tablas: Para realizar formatos de tabla en Markdown, se puede usar la función knitr::kable y el argumento caption nos permite darle el nombre a la tabla  
+
+```{r,echo=FALSE,fig.cap="Tabla 1: Kable de knitr",fig.align="center",fig.width=8}
+knitr::kable(
+  mtcars[1:5, ],
+  caption = "Tabla 1: Un kable de knitr."
+)
+```
+
+Otros argumentos de la función kable. Para ello, vamos a usar la base de datos iris y crear una tabla. Con el argumento col.names podemos agregar nombres a las columnas. Para este caso necesitamos 5 nombres
+
+```{r,echo=FALSE}
+iris2 <- head(iris)
+knitr::kable(iris2, col.names = c(1,2,3,4,5)
+)
+```
+Con el argumento ***align*** podemos especificar la alineación de las columnas de nuestra tabla. Es importante tener en cuenta que debemos especificarle hacia donde queremos alinear dichas columnas *l* es hacia la izquierda, *c* es en el centro, *r* es a la derecha. Podemos hacer una combinacion de ellos o usar uno solo. Aquí mismo, agregamos el parametro ***caption*** para agregar un titulo 
+```{r,echo=FALSE}
+iris2 <- head(iris)
+knitr::kable(iris2, col.names = c(1,2,3,4,5), align = "lccrr", caption = "Tabla"
+)
+```
+
+***Ejemplo 2***: de como agregar graficos en Rmarkdown. Para este caso, tomamos el dataset millas, que contiene observaciones para 38 modelos de automóviles recopiladas por la Agencia de Protección Ambiental de los EE. UU. Para este caso, la variable **cilindrada** presenta el tamaño del motor del automovil y la variable **autopista** muestra la eficiencia del uso de combustible de un automóvil en carretera, en millas por galón. El grafico arrojado. 
+
+
+```{r,echo=FALSE,fig.cap="Grafica 1: Tamaño Vs. Eficiencia",fig.align="center",fig.width=8}
+library(ggplot2)
+library(datos)
+ggplot(data = millas) +
+  geom_point(mapping = aes(x = cilindrada, y = autopista, color = clase))
+```
+
+***Ejemplo 3: Modelo de regresión logistica***
+Summary de la base de datos 
+```{r,echo=FALSE}
+titanic<-read.csv(file="train.csv")
+summary(titanic)
+```
+
+borramos las filas que estan vacias 
+```{r, echo=FALSE}
+titanic<-titanic[complete.cases(titanic),]
+summary(titanic)
+```
+
+Edad promedio de los pasajeros 
+```{r,echo=FALSE}
+mean(titanic$Age)
+```
+
+verificamos la estructura de los datos 
+```{r,echo=FALSE}
+str(titanic)
+titanic$Pclass<-factor(titanic$Pclass)
+```
+
+Corremos el modelo de regresión logistica
+```{r,echo=FALSE}
+fitlog2<-glm(Survived~Pclass+Sex+Age+SibSp,data=titanic,family = binomial)
+summary(fitlog2)
+```
+
+***Ejemplo 4:*** Insertar imagenes en el documento***
+En tu archivo Rmarkdown puedes agregar imagenes que necesitas. Le puedes dar nombres y definir el tamaño.
+
+
+<center> 
+![Logo 1](C:/Users/VIVIANA FLOREZ/Desktop/Logo.png){width=1in}
+
+***Ejemplo 5: Insertar mapas dinamicos***
+```{r,echo=FALSE,fig.align="center"}
+library(leaflet)
+leaflet() %>% addTiles() %>% setView(lat = 30.2621, lng=-97.7382,zoom = 17)
+```
+
+

@@ -1,0 +1,80 @@
+### Paquete sqldf
+library(sqldf)
+El paquete sqldf  sirve para ejecutar sentencias SQL en marcos de datos R, optimizado para mayor comodidad.
+
+
+### Consultas SQL
+###### Hay una gran cantidad de comandos principales de SQL. Las consultas se realizan con el comando SELECT.	
+
+###### Por convención, la sintaxis SQL se escribe en MAYÚSCULAS y los nombres de variables / nombres de bases de datos se escriben en minúsculas. Técnicamente, la sintaxis SQL no distingue entre mayúsculas y minúsculas, por lo que puede escribirse en minúsculas o de otro modo. Sin embargo, tenga en cuenta que R no distingue entre mayúsculas y minúsculas, por lo que los nombres de las variables y los nombres de los marcos de datos deben tener las mayúsculas adecuadas. Por lo tanto:
+  
+# SQL Queries
+## Comodín
+###### Se puede pasar un comodín para extraer todo.
+### Selecionar todo los elementos de Iris
+sqldf("SELECT * FROM iris")
+
+###### La sintaxis básica de SELECT es
+###### SELECT variable1, variable2 FROM data
+
+### ver cuantos datos tenemos de cada especie
+sqldf ("SELECT COUNT(species), species from iris GROUP BY species")
+
+
+## WHERE
+###### Las declaraciones condicionales se pueden agregar a través de WHERE:
+
+### Selecionar todo de iris cuando las especie sea igual a setosa
+sqldf("SELECT * FROM iris where species='setosa'")
+
+## PEDIR POR
+###### Para ordenar variables, use la sintaxis, donde la elección de ASC ascendente o 
+###### DESC descendente se realiza por variable.
+
+## Selecionar los datos de mayor a menor valor de petal_length
+sqldf("Select petal_length AS 'petal_length DESC',  UPPER (species)  from iris order by petal_length DESC" )
+
+## Selecionar los datos de menor a mayor valor de petal_length
+sqldf("Select petal_length AS 'petal_length DESC',  UPPER (species)  from iris order by petal_length ASC" )
+
+## LÍMITE
+###### Para controlar la cantidad de resultados devueltos, use LIMIT #.
+sqldf('SELECT * FROM iris LIMIT 5')
+
+### csv
+rowdata <- read.csv('/Users/52664/AnalyticsRL/Analytics/Recursos/iris.csv',data)
+getwd()
+setwd("\Users\52664\Documents\AnalyticsRL\Analytics\Recursos")
+getwd()
+dataset = read.csv('iris.csv')
+
+
+rowdata <- read.csv('lathes_data.csv') 
+### csv
+iris<- read.csv('C:\Users\52664\Documents\AnalyticsRL\Analytics\Recursos\iris.csv')
+## DÓNDE
+###### Las declaraciones condicionales se pueden agregar a través de WHERE:
+### Selecionar todo de iris cuando las especie sea versicolor y petal_length sea de rango 1.0 a 1.3
+sqldf("SELECT * FROM iris where species='versicolor' and petal_length BETWEEN 1.0 and 1.3")
+sqldf("SELECT * FROM iris where   petal_length>=1.0 and petal_length<=1.3")
+
+## LIKE
+###### LIKE se puede considerar como un comando de expresión regular débil. 
+###### Solo permite el comodín único %que coincide con cualquier número de caracteres. 
+### Selecionar los datos de cuyo sepal_length inicia con 5
+sqldf("select sepal_length,sepal_width,petal_length,petal_width, species from iris
+      where sepal_length like '%5'")
+
+
+### Selecionar los datos de cuyo sepal_width contengan un 4
+sqldf("select sepal_length,sepal_width,petal_length,petal_width, species from iris
+      where sepal_width like '4%'")
+
+### Selecionar los datos de cuyo sepal_length inicia con 5
+sqldf("select sepal_length,sepal_width,petal_length,petal_width, species from iris
+      where sepal_width like '%4%'")
+### EN
+###### WHERE IN se utiliza similar  %in%. También es compatible NOT.
+#### Selecionar los datos de petal_length que sean 4, 5
+sqldf('SELECT * FROM iris WHERE petal_length IN (4,5)')
+
